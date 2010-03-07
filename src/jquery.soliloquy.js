@@ -16,7 +16,7 @@
 			$.each(data, function(i, item)
 			{
 				//alert( $(element).html() );
-				$(element).append( buildPost( item ) );
+				$(element).append( buildTwitterPost( item ) );
 			});
 		});
 	
@@ -25,9 +25,10 @@
 		return this;
 	};
 
-	function buildPost( post )
+	function buildTwitterPost( post )
 	{
 		var html = "<div>";
+		html += "<b>" + post.user['screen_name'] + "</b> ";
 		html += post.text;
 		html += "</div>";
 		return html;
