@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Soliloquy by devth</title>
+ 
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="http://github.com/devth/soliloquy/raw/master/src/jquery.soliloquy.js" type="text/javascript" charset="utf-8"></script>
+    
+    <script type="text/javascript" charset="utf-8">
+      $(function(){
+        // alert('redy!');
+        
+        $('.feed').soliloquy( 'devth', { posts: 15 } );
+        
+      });
+    </script>
+ 
+    <style type="text/css" media="screen">
+      body { font-family: 'Adobe Garamond Pro', 'Garamond Premier Pro', Garamond, Times, 'Times New Roman', serif; }
+      h1 { text-align:center; color: #ddd;  margin:40px 0; font-size:120px; }
+      
+      .feed { width: 800px; margin: auto;}
+      .feed div { font-size: 20px; margin:20px; color:#333; }
+            
+    </style>
+  </head>
+  
+  <body>
+    <h1>Soliloquy</h1>
+    <div class="feed"></div>
+  </body>
+</html>
