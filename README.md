@@ -7,3 +7,9 @@ For a working demo, visit the [project page](http://devth.github.com/soliloquy/)
 ## License
 Copyright (c) 2010 Trevor C. Hartman<br>
 Released under the [MIT License](http://github.com/devth/soliloquy/blob/master/LICENSE)
+
+<script type="text/javascript">
+try {
+var projectTracker = _gat._getTracker("UA-15089426-2");
+projectTracker._trackPageview();
+} catch(err) {}</script>
