@@ -4,15 +4,13 @@
   <head>
     <title>Soliloquy Example</title>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js" type="text/javascript" charset="utf-8"></script>
     <script src="../src/jquery.soliloquy.js" type="text/javascript" charset="utf-8"></script>
     
     <script type="text/javascript" charset="utf-8">
-      $(function(){
-        // alert('redy!');
-        
-        $('.feed').soliloquy( 'devth', { posts: 15 } );
-        
+      $(function()
+      {  
+        $('.feed').soliloquy().twitter( 'devth', { posts: 15 } ); 
       });
     </script>
 
@@ -24,6 +22,7 @@
       .feed div { font-size: 20px; margin:20px; color:#333; }
       
       .created-at { font-size:70%; color:#666;}
+      .screen-name { font-weight: bold; }
       
     </style>
   </head>
