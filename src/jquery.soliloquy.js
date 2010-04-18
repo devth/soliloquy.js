@@ -18,7 +18,7 @@ http://github.com/devth/soliloquy
       {
         return jq.each(function(){
           
-          var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults, options);
+          var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
           var api_twitter = "http://twitter.com/status/user_timeline/"+username+".json?count=" + settings.posts + "&callback=?";
           $.getJSON(api_twitter, function(data) {
             $.each(data, function(i, item)
@@ -96,29 +96,20 @@ http://github.com/devth/soliloquy
     delta = delta + (relative_to.getTimezoneOffset() * 60);
 
     var r = '';
-    if (delta < 60)
-    {
-      r = 'a minute ago';
-    } else if(delta < 120) {
-      r = 'couple of minutes ago';
-    } else if(delta < (45*60)) {
-      r = (parseInt(delta / 60)).toString() + ' minutes ago';
-    } else if(delta < (90*60)) {
-      r = 'an hour ago';
-    } else if(delta < (24*60*60)) {
-      r = '' + (parseInt(delta / 3600)).toString() + ' hours ago';
-    } else if(delta < (48*60*60)) {
-      r = '1 day ago';
-    } else {
-      r = (parseInt(delta / 86400)).toString() + ' days ago';
-    }
+    if (delta < 60) r = 'a minute ago';
+    else if(delta < 120)  r = 'couple of minutes ago';
+    else if(delta < (45*60)) r = (parseInt(delta / 60)).toString() + ' minutes ago';
+    else if(delta < (90*60)) r = 'an hour ago';
+    else if(delta < (24*60*60)) r = '' + (parseInt(delta / 3600)).toString() + ' hours ago';
+    else if(delta < (48*60*60)) r = '1 day ago';
+    else r = (parseInt(delta / 86400)).toString() + ' days ago';
 
     return r;
   }
 
 
   // DEFAULTS
-  jQuery.fn.soliloquy.defaults = {
+  jQuery.fn.soliloquy.defaults_twitter = {
     posts: 10
   };
   
