@@ -10,7 +10,8 @@
     <script type="text/javascript" charset="utf-8">
       $(function()
       {  
-        $('.feed').soliloquy().twitter( 'devth', { posts: 15 } ); 
+        $('.feed').soliloquy().twitter( 'devth', { posts: 5 } );
+        $('.feed').soliloquy().twitter_list( 'rails', 'core' );
       });
     </script>
 
@@ -30,5 +31,6 @@
   <body>
     <h1>Soliloquy</h1>
     <div class="feed"></div>
+    <div class="twitter_list"></div>
   </body>
 </html>

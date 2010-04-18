@@ -20,20 +20,27 @@ http://github.com/devth/soliloquy
           
           var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
           var api_twitter = "http://twitter.com/status/user_timeline/"+username+".json?count=" + settings.posts + "&callback=?";
-          $.getJSON(api_twitter, function(data) {
-            $.each(data, function(i, item)
-            {
+          $.getJSON(api_twitter, function(data){
+            $.each(data, function(i, item){
               $(jq).append( buildTwitterPost( item ) );
             });
           });
           
         });
-        
-        
       },
-      twitter_list: function()
+      twitter_list: function( username, listname, options )
       {
-        return jq.each(function(){
+        return jq.each(function(){        
+       		// SETUP SETTINGS
+       		var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
+
+       		// RETRIEVE RESULTS
+       		var api_twitter = "http://api.twitter.com/1/"+username+"/lists/"+listname+"/statuses.json?per_page=" + settings.posts + "&callback=?";
+       		$.getJSON(api_twitter, function(data){
+       			$.each(data, function(i, item){
+       				$(jq).append( buildTwitterPost( item ) );
+       		  });
+       		});
           
         });
       }
