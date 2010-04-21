@@ -13,42 +13,43 @@ http://github.com/devth/soliloquy
     var $this = $(this);
     var jq = this;
     
-    return {
-      twitter: function( username, options )
-      {
-        return jq.each(function(){
-          
-          var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
-          var api_twitter = "http://twitter.com/status/user_timeline/"+username+".json?count=" + settings.posts + "&callback=?";
-          $.getJSON(api_twitter, function(data){
-            $.each(data, function(i, item){
-              $(jq).append( buildTwitterPost( item ) );
-            });
+    // API functions
+    var twitter = function ( username, options ) {
+      return jq.each(function () {
+        var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
+        var api_twitter = "http://twitter.com/status/user_timeline/"+username+".json?count=" + settings.posts + "&callback=?";
+        $.getJSON(api_twitter, function(data){
+          $.each(data, function(i, item){
+            $(jq).append( buildTwitterPost( item ) );
           });
-          
         });
-      },
-      twitter_list: function( username, listname, options )
-      {
-        return jq.each(function(){        
-       		// SETUP SETTINGS
-       		var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
-
-       		// RETRIEVE RESULTS
-       		var api_twitter = "http://api.twitter.com/1/"+username+"/lists/"+listname+"/statuses.json?per_page=" + settings.posts + "&callback=?";
-       		$.getJSON(api_twitter, function(data){
-       			$.each(data, function(i, item){
-       				$(jq).append( buildTwitterPost( item ) );
-       		  });
-       		});
-          
-        });
-      }
+      });
+    };
+    
+    var twitter_list = function ( username, listname, options ) {
+      return jq.each(function () {        
+     		// SETUP SETTINGS
+     		var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
+     		// RETRIEVE RESULTS
+     		var api_twitter = "http://api.twitter.com/1/"+username+"/lists/"+listname+"/statuses.json?per_page=" + settings.posts + "&callback=?";
+     		$.getJSON(api_twitter, function(data){
+     			$.each(data, function(i, item){
+     				$(jq).append( buildTwitterPost( item ) );
+     		  });
+     		});
+      });
+    };
+    
+    // EXPOSE API CALLS
+    return {
+      twitter: twitter,
+      twitter_list: twitter_list
     };
     
   };
 
 
+  // HELPERS
   $.fn.extend({
     linkUrl: function() {
       var returning = [];
@@ -75,13 +76,10 @@ http://github.com/devth/soliloquy
       return $(returning);
     }
   });
-
-
   function processPost( postText )
   {
     return $([ postText ]).linkUrl().linkUser().linkHash()[0];
   }
-
   function buildTwitterPost( post )
   {
     var html = "<div>";
@@ -91,8 +89,6 @@ http://github.com/devth/soliloquy
     html += "</div>";
     return html;
   }
-  
-  
   function relative_time(time_value)
   {
     var values = time_value.split(" ");
