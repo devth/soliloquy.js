@@ -2,50 +2,35 @@
   "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>
-    <title>Soliloquy by devth</title>
- 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="http://github.com/devth/soliloquy/raw/master/src/jquery.soliloquy.js" type="text/javascript" charset="utf-8"></script>
+    <title>Soliloquy Example</title>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../src/jquery.soliloquy.js" type="text/javascript" charset="utf-8"></script>
     
     <script type="text/javascript" charset="utf-8">
-      $(function(){
-        // alert('redy!');
-        
-        $('.feed').soliloquy( 'devth', { posts: 15 } );
-        
+      $(function()
+      {  
+        $('.feed').soliloquy().twitter( 'devth', { posts: 5 } );
+        $('.feed').soliloquy().twitter_list( 'rails', 'core' );
       });
     </script>
- 
+
     <style type="text/css" media="screen">
       body { font-family: 'Adobe Garamond Pro', 'Garamond Premier Pro', Garamond, Times, 'Times New Roman', serif; }
       h1 { text-align:center; color: #ddd;  margin:40px 0; font-size:120px; }
       
       .feed { width: 800px; margin: auto;}
       .feed div { font-size: 20px; margin:20px; color:#333; }
-            
-      .created-at { font-size:70%; color:#666;}
       
-      .link { text-align: center; }
-      .link a { color: #000;}
-      .link a:hover { color: #aaa;}
+      .created-at { font-size:70%; color:#666;}
+      .screen-name { font-weight: bold; }
+      
     </style>
   </head>
   
   <body>
     <h1>Soliloquy</h1>
     <div class="feed"></div>
-    <div class="link"><a href="http://github.com/devth/soliloquy">Soliloquy on GitHub</a></div>
-    
-    <script type="text/javascript">
-    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-    <script type="text/javascript">
-    try{
-    var pageTracker = _gat._getTracker("UA-15089426-1");
-    pageTracker._trackPageview();
-    } catch(err) {}
-    </script>
-    
+    <div class="twitter_list"></div>
   </body>
 </html>
