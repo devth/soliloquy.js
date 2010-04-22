@@ -44,7 +44,7 @@ http://github.com/devth/soliloquy
       $.getJSON(api_lastfm, function(data){
         return jq.each(function () {
           $.each(data.recenttracks.track, function(i, item){
-            $(jq).append( buildLastFmPost( item ));
+            $(jq).append( buildLastFmPost( item, settings ));
           });
         });
       });
@@ -91,11 +91,9 @@ http://github.com/devth/soliloquy
   {
     return $([ postText ]).linkUrl().linkUser().linkHash()[0];
   }
-  function relative_time(time_value)
+  function relative_time( parsed_date )
   {
-    var values = time_value.split(" ");
-    time_value = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
-    var parsed_date = Date.parse(time_value);
+    
     var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
     var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
     delta = delta + (relative_to.getTimezoneOffset() * 60);
@@ -111,22 +109,42 @@ http://github.com/devth/soliloquy
 
     return r;
   }
+  function parse_date_string( value )
+  {
+    
+  }
     
   // POST BUILDERS
   function buildTwitterPost( post )
   {
+    console.log( post.created_at );
     var html = "<div class='twitter_post'>";
     html += "<span class='screen-name'>" + post.user['screen_name'] + "</span> ";
     html += processPost( post.text );
-    html += " <span class='created-at'>" + relative_time(post.created_at) + "</span>";
+    
+    var values = post.created_at.split(" ");
+    time_value = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
+    var parsed_date = Date.parse(time_value);
+    
+    html += " <span class='created-at'>" + relative_time( parsed_date ) + "</span>";
     html += "</div>";
     return html;
   }
-  function buildLastFmPost( post )
+  function buildLastFmPost( post, settings )
   {
+    console.log( post );
     var html = "<div class='lastfm_post'>";
-    html += post.artist['#text'] + " &ndash; ";
-    html += post.name;
+    if ( settings ) html += "<span class='screen-name'>" + settings.username + "</span> ";
+    html += "<span class='lastfm_artist'>" + post.artist['#text'] + "</span> &ndash; ";
+    html += "<span class='lastfm_track'>" + post.name + "</span>";
+
+    var date_string = settings.label_listening_now;
+    if ( post.date )
+    {
+      parsed_date = new Date( post.date['#text'] );
+      date_string = relative_time( parsed_date )
+    }
+    html += " <span class='created-at'>" +  date_string + "</span>";
     html += "</div>";
     return html;
   }
@@ -141,7 +159,8 @@ http://github.com/devth/soliloquy
   jQuery.fn.soliloquy.defaults_lastfm = {
     tracks: 10,
     username: 'trevorhartman',
-    api_key: '930dbe080df156eb81444b27a63d948b'
+    api_key: '930dbe080df156eb81444b27a63d948b',
+    label_listening_now: 'Listening Now'
   }
   
   
