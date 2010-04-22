@@ -15,10 +15,10 @@ http://github.com/devth/soliloquy
     
     // API functions
     var twitter = function ( username, options ) {
-      return jq.each(function () {
-        var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
-        var api_twitter = "http://twitter.com/status/user_timeline/"+username+".json?count=" + settings.posts + "&callback=?";
-        $.getJSON(api_twitter, function(data){
+      var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
+      var api_twitter = "http://twitter.com/status/user_timeline/"+username+".json?count=" + settings.posts + "&callback=?";
+      $.getJSON(api_twitter, function(data){
+        return jq.each(function () {
           $.each(data, function(i, item){
             $(jq).append( buildTwitterPost( item ) );
           });
@@ -27,12 +27,13 @@ http://github.com/devth/soliloquy
     };
     
     var twitter_list = function ( username, listname, options ) {
-      return jq.each(function () {        
-     		// SETUP SETTINGS
-     		var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
-     		// RETRIEVE RESULTS
-     		var api_twitter = "http://api.twitter.com/1/"+username+"/lists/"+listname+"/statuses.json?per_page=" + settings.posts + "&callback=?";
-     		$.getJSON(api_twitter, function(data){
+      // SETUP SETTINGS
+   		var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
+   		// RETRIEVE RESULTS
+   		var api_twitter = "http://api.twitter.com/1/"+username+"/lists/"+listname+"/statuses.json?per_page=" + settings.posts + "&callback=?";
+   		
+   		$.getJSON(api_twitter, function(data){
+        return jq.each(function () {
      			$.each(data, function(i, item){
      				$(jq).append( buildTwitterPost( item ) );
      		  });
@@ -115,6 +116,12 @@ http://github.com/devth/soliloquy
   jQuery.fn.soliloquy.defaults_twitter = {
     posts: 10
   };
+  
+  jQuery.fn.soliloquy.defalts_lastfm = {
+    tracks: 10,
+    username: 'devth',
+    api_key: '930dbe080df156eb81444b27a63d948b'
+  }
   
   
 })(jQuery);
