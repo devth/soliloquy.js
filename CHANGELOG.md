@@ -1,3 +1,6 @@
+# 0.3.0
+Added lastfm recent tracks call at soliloquy().lastfm({options})
+
 # 0.2.0
 Added twitter_list function
 
