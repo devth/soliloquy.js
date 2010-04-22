@@ -40,13 +40,21 @@ http://github.com/devth/soliloquy
     
     var lastfm = function ( options ) {
       var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_lastfm, options);
-      var api_last.fm = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='+settings.username+'&api_key='+settings.api_key+'&limit='+settings.tracks+'&format=json&callback=?';
+      var api_lastfm = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='+settings.username+'&api_key='+settings.api_key+'&limit='+settings.tracks+'&format=json&callback=?';
+      $.getJSON(api_lastfm, function(data){
+        return jq.each(function () {
+          $.each(data.recenttracks.track, function(i, item){
+            $(jq).append( buildLastFmPost( item ));
+          });
+        });
+      });
     };
     
     // EXPOSE API CALLS
     return {
       twitter: twitter,
-      twitter_list: twitter_list
+      twitter_list: twitter_list,
+      lastfm: lastfm
     };
     
   };
@@ -83,15 +91,6 @@ http://github.com/devth/soliloquy
   {
     return $([ postText ]).linkUrl().linkUser().linkHash()[0];
   }
-  function buildTwitterPost( post )
-  {
-    var html = "<div>";
-    html += "<span class='screen-name'>" + post.user['screen_name'] + "</span> ";
-    html += processPost( post.text );
-    html += " <span class='created-at'>" + relative_time(post.created_at) + "</span>";
-    html += "</div>";
-    return html;
-  }
   function relative_time(time_value)
   {
     var values = time_value.split(" ");
@@ -112,6 +111,26 @@ http://github.com/devth/soliloquy
 
     return r;
   }
+    
+  // POST BUILDERS
+  function buildTwitterPost( post )
+  {
+    var html = "<div class='twitter_post'>";
+    html += "<span class='screen-name'>" + post.user['screen_name'] + "</span> ";
+    html += processPost( post.text );
+    html += " <span class='created-at'>" + relative_time(post.created_at) + "</span>";
+    html += "</div>";
+    return html;
+  }
+  function buildLastFmPost( post )
+  {
+    var html = "<div class='lastfm_post'>";
+    html += post.artist['#text'] + " &ndash; ";
+    html += post.name;
+    html += "</div>";
+    return html;
+  }
+
 
 
   // DEFAULTS
@@ -121,7 +140,7 @@ http://github.com/devth/soliloquy
   
   jQuery.fn.soliloquy.defaults_lastfm = {
     tracks: 10,
-    username: 'devth',
+    username: 'trevorhartman',
     api_key: '930dbe080df156eb81444b27a63d948b'
   }
   
