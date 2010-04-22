@@ -27,11 +27,8 @@ http://github.com/devth/soliloquy
     };
     
     var twitter_list = function ( username, listname, options ) {
-      // SETUP SETTINGS
    		var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
-   		// RETRIEVE RESULTS
    		var api_twitter = "http://api.twitter.com/1/"+username+"/lists/"+listname+"/statuses.json?per_page=" + settings.posts + "&callback=?";
-   		
    		$.getJSON(api_twitter, function(data){
         return jq.each(function () {
      			$.each(data, function(i, item){
@@ -39,6 +36,11 @@ http://github.com/devth/soliloquy
      		  });
      		});
       });
+    };
+    
+    var lastfm = function ( options ) {
+      var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_lastfm, options);
+      var api_last.fm = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='+settings.username+'&api_key='+settings.api_key+'&limit='+settings.tracks+'&format=json&callback=?';
     };
     
     // EXPOSE API CALLS
@@ -117,7 +119,7 @@ http://github.com/devth/soliloquy
     posts: 10
   };
   
-  jQuery.fn.soliloquy.defalts_lastfm = {
+  jQuery.fn.soliloquy.defaults_lastfm = {
     tracks: 10,
     username: 'devth',
     api_key: '930dbe080df156eb81444b27a63d948b'
