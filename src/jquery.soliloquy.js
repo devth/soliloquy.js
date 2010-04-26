@@ -1,3 +1,4 @@
+/*jslint indent: 2 */
 /*
 Soliloquy - a jQuery plugin for aggregating posts from many data sources
 Copyright (c) 2010 Trevor C. Hartman
@@ -5,10 +6,10 @@ Released under MIT License
 http://github.com/devth/soliloquy
 */
 
-(function($)
+(function ($)
 {
 
-  jQuery.fn.soliloquy = function()
+  jQuery.fn.soliloquy = function ()
   {
     var $this = $(this);
     var jq = this;
