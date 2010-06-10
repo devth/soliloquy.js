@@ -1,3 +1,4 @@
+/*jslint indent: 2 */
 /*
 Soliloquy - a jQuery plugin for aggregating posts from many data sources
 Copyright (c) 2010 Trevor C. Hartman
@@ -5,43 +6,45 @@ Released under MIT License
 http://github.com/devth/soliloquy
 */
 
-(function($)
+(function ($)
 {
+  
+  String.prototype.supplant = function (o) { // Crockford's supplant from http://javascript.crockford.com/remedial.html
+    return this.replace(/{([^{}]*)}/g,
+      function (a, b) {
+        var r = o[b];
+        return typeof r === 'string' || typeof r === 'number' ? r : a;
+      }
+    );
+  };
 
-  jQuery.fn.soliloquy = function()
+  jQuery.fn.soliloquy = function ()
   {
     var $this = $(this);
     var jq = this;
     
     // API functions
     var twitter = function ( username, options ) {
-      var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
-      var api_twitter = "http://twitter.com/status/user_timeline/"+username+".json?count=" + settings.posts + "&callback=?";
-      $.getJSON(api_twitter, function(data){
-        return jq.each(function () {
-          $.each(data, function(i, item){
-            $(jq).append( buildTwitterPost( item ) );
-          });
-        });
-      });
+      var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_twitter, options);
+      settings = jQuery.extend( {}, settings_twitter, settings );
+      settings.api = settings.api.supplant({ username: username, posts: settings.posts });
+      
+      api_call( settings );
     };
     
     var twitter_list = function ( username, listname, options ) {
-   		var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_twitter, options);
-   		var api_twitter = "http://api.twitter.com/1/"+username+"/lists/"+listname+"/statuses.json?per_page=" + settings.posts + "&callback=?";
-   		$.getJSON(api_twitter, function(data){
-        return jq.each(function () {
-     			$.each(data, function(i, item){
-     				$(jq).append( buildTwitterPost( item ) );
-     		  });
-     		});
-      });
+      var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_twitter_list, options);
+      settings = jQuery.extend({}, settings_twitter_list, settings);
+      settings.api = settings.api.supplant({ username: username, listname: listname, posts: settings.posts });
+
+      api_call( settings );
     };
     
+    // TODO:REFACTOR
     var lastfm = function ( options ) {
-      var settings = jQuery.extend({}, jQuery.fn.soliloquy.defaults_lastfm, options);
+      var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_lastfm, options);
       var api_lastfm = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='+settings.username+'&api_key='+settings.api_key+'&limit='+settings.tracks+'&format=json&callback=?';
-      $.getJSON(api_lastfm, function(data){
+      $.getJSON(api_lastfm, function(data) {
         return jq.each(function () {
           $.each(data.recenttracks.track, function(i, item){
             $(jq).append( buildLastFmPost( item, settings ));
@@ -49,6 +52,17 @@ http://github.com/devth/soliloquy
         });
       });
     };
+    
+    // API HELPER
+    function api_call( settings ) {
+      $.getJSON( settings.api, function (data) {
+        return jq.each(function () {
+          $.each(data, function(i, item){
+            $(jq).append( settings.post_builder.call( this, item, settings ));
+          });
+        });
+      });
+    }
     
     // EXPOSE API CALLS
     return {
@@ -93,7 +107,6 @@ http://github.com/devth/soliloquy
   }
   function relative_time( parsed_date )
   {
-    
     var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
     var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
     delta = delta + (relative_to.getTimezoneOffset() * 60);
@@ -115,9 +128,9 @@ http://github.com/devth/soliloquy
   }
     
   // POST BUILDERS
-  function buildTwitterPost( post )
+  function buildTwitterPost( post, settings )
   {
-    console.log( post.created_at );
+    // console.log( post.created_at );
     var html = "<div class='twitter_post'>";
     html += "<span class='screen-name'>" + post.user['screen_name'] + "</span> ";
     html += processPost( post.text );
@@ -132,7 +145,7 @@ http://github.com/devth/soliloquy
   }
   function buildLastFmPost( post, settings )
   {
-    console.log( post );
+    // console.log( post );
     var html = "<div class='lastfm_post'>";
     if ( settings ) html += "<span class='screen-name'>" + settings.username + "</span> ";
     html += "<span class='lastfm_artist'>" + post.artist['#text'] + "</span> &ndash; ";
@@ -152,16 +165,35 @@ http://github.com/devth/soliloquy
 
 
   // DEFAULTS
-  jQuery.fn.soliloquy.defaults_twitter = {
-    posts: 10
-  };
   
-  jQuery.fn.soliloquy.defaults_lastfm = {
+  // PUBLIC
+  jQuery.fn.soliloquy.options_twitter = {
+    posts: 10,
+    username: "devth"
+  };
+  jQuery.fn.soliloquy.options_twitter_list = jQuery.extend({}, jQuery.fn.soliloquy.options_twitter, {
+    username: "rails",
+    listname: "core"
+  });
+  jQuery.fn.soliloquy.options_lastfm = {
     tracks: 10,
     username: 'trevorhartman',
     api_key: '930dbe080df156eb81444b27a63d948b',
-    label_listening_now: 'Listening Now'
+    label_listening_now: 'Now Playing'
   }
   
+  // INTERNAL
+  var settings_twitter = {
+    api: "http://twitter.com/status/user_timeline/{username}.json?count={posts}&callback=?",
+    post_builder: buildTwitterPost
+  };
+  var settings_twitter_list = {
+    api: "http://api.twitter.com/1/{username}/lists/{listname}/statuses.json?per_page={posts}&callback=?",
+    post_builder: buildTwitterPost
+  };
+  var settings_lastfm = {
+    api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={api_key}&limit={tracks}&format=json&callback=?',
+    post_builder: buildLastFmPost
+  };
   
 })(jQuery);
