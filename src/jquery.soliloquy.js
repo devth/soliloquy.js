@@ -6,8 +6,7 @@ Released under MIT License
 http://github.com/devth/soliloquy
 */
 
-(function ($)
-{
+(function ($) {
   
   String.prototype.supplant = function (o) { // Crockford's supplant from http://javascript.crockford.com/remedial.html
     return this.replace(/{([^{}]*)}/g,
@@ -18,53 +17,36 @@ http://github.com/devth/soliloquy
     );
   };
 
-  jQuery.fn.soliloquy = function ()
-  {
+  jQuery.fn.soliloquy = function (){
     var $this = $(this);
     var jq = this;
     
-    // API functions
+    // API MODULES
     var twitter = function ( username, options ) {
       var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_twitter, options);
       settings = jQuery.extend( {}, settings_twitter, settings );
-      settings.api = settings.api.supplant({ username: username, posts: settings.posts });
+      settings.username = username;
       
-      api_call( settings );
+      api_call( settings, jq );
     };
     
     var twitter_list = function ( username, listname, options ) {
       var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_twitter_list, options);
       settings = jQuery.extend({}, settings_twitter_list, settings);
-      settings.api = settings.api.supplant({ username: username, listname: listname, posts: settings.posts });
+      settings.username = username;
+      settings.listname = listname;
 
-      api_call( settings );
+      api_call( settings, jq );
     };
     
-    // TODO:REFACTOR
     var lastfm = function ( options ) {
       var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_lastfm, options);
-      var api_lastfm = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user='+settings.username+'&api_key='+settings.api_key+'&limit='+settings.tracks+'&format=json&callback=?';
-      $.getJSON(api_lastfm, function(data) {
-        return jq.each(function () {
-          $.each(data.recenttracks.track, function(i, item){
-            $(jq).append( buildLastFmPost( item, settings ));
-          });
-        });
-      });
+      settings = jQuery.extend( {}, settings_lastfm, settings );
+
+      api_call( settings, jq );
     };
     
-    // API HELPER
-    function api_call( settings ) {
-      $.getJSON( settings.api, function (data) {
-        return jq.each(function () {
-          $.each(data, function(i, item){
-            $(jq).append( settings.post_builder.call( this, item, settings ));
-          });
-        });
-      });
-    }
-    
-    // EXPOSE API CALLS
+    // EXPOSE APIs
     return {
       twitter: twitter,
       twitter_list: twitter_list,
@@ -126,6 +108,29 @@ http://github.com/devth/soliloquy
   {
     
   }
+
+  // API HELPER
+  function api_call( settings, jq ) {
+    settings.api = settings.api.supplant( settings ); // POPULATE dynamic bits
+  
+    $.getJSON( settings.api, function (data) {
+      return jq.each( function(){ 
+        if ( settings.data_handler ) settings.data_handler.call( this, data, settings, jq );
+        else handle_data( data, settings, jq ); 
+      });
+    });
+  }
+  function handle_data(data, settings, jq){ // GENERIC
+    $.each(data, function(i, item){
+      $(jq).append( settings.post_builder.call( this, item, settings ));
+    });
+  }
+  function handle_lastfm_data(data, settings, jq){
+    $.each(data.recenttracks.track, function(i, item){
+      $(jq).append( buildLastFmPost( item, settings ));
+    });
+  };
+  
     
   // POST BUILDERS
   function buildTwitterPost( post, settings )
@@ -168,12 +173,10 @@ http://github.com/devth/soliloquy
   
   // PUBLIC
   jQuery.fn.soliloquy.options_twitter = {
-    posts: 10,
-    username: "devth"
+    posts: 10
   };
   jQuery.fn.soliloquy.options_twitter_list = jQuery.extend({}, jQuery.fn.soliloquy.options_twitter, {
-    username: "rails",
-    listname: "core"
+
   });
   jQuery.fn.soliloquy.options_lastfm = {
     tracks: 10,
@@ -185,15 +188,19 @@ http://github.com/devth/soliloquy
   // INTERNAL
   var settings_twitter = {
     api: "http://twitter.com/status/user_timeline/{username}.json?count={posts}&callback=?",
-    post_builder: buildTwitterPost
+    post_builder: buildTwitterPost,
+    username: ''
   };
   var settings_twitter_list = {
     api: "http://api.twitter.com/1/{username}/lists/{listname}/statuses.json?per_page={posts}&callback=?",
-    post_builder: buildTwitterPost
+    post_builder: buildTwitterPost,
+    username: '',
+    listname: ''
   };
   var settings_lastfm = {
     api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={api_key}&limit={tracks}&format=json&callback=?',
-    post_builder: buildLastFmPost
+    post_builder: buildLastFmPost,
+    data_handler: handle_lastfm_data
   };
   
 })(jQuery);

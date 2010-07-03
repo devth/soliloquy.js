@@ -1,3 +1,6 @@
+# 0.4.0
+Refactored api calls abstracting unique bits into settings and options.
+
 # 0.3.0
 Added lastfm recent tracks call at soliloquy().lastfm({options})
 
