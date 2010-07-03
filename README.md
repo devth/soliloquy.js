@@ -4,6 +4,17 @@ Soliloquy is a jQuery plugin that aggregates posts from various data sources and
 ## Demo
 For a working demo, visit the [project page](http://devth.github.com/soliloquy/)
 
+## Modules
+AJAX data retrieval is abstracted away as much as possible, leaving the absolute necessary pieces to be described for each module.
+
+* Options -- `jQuery.fn.soliloquy.options_[name]` -- public options to be used as defaults when a user doesn't override them in the API call.
+* Settings -- `jQuery.fn.soliloquy.settings_[name]` -- internal settings that include properties such as the external API url and the local function to parse the data and create the HTML.
+
+The abstracted architecture makes it simple to add new data sources as they come along. See the source for examples.
+
+## Contributing
+Fork the project, add a module and send a pull request.
+
 ## License
 Copyright (c) 2010 Trevor C. Hartman<br>
 Released under the [MIT License](http://github.com/devth/soliloquy/blob/master/LICENSE)
