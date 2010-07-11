@@ -10,9 +10,9 @@
     <script type="text/javascript" charset="utf-8">
       $(function()
       {  
-        $('.feed').soliloquy().twitter( 'devth', { posts: 5 } );
+        $('.feed').soliloquy().twitter( 'devth', { posts: 5, relative_dates: false } );
         $('.feed').soliloquy().twitter_list( 'rails', 'core', { posts: 2 } );
-        $('.feed').soliloquy().lastfm();
+        $('.feed').soliloquy().lastfm( { relative_dates: false });
       });
     </script>
 
