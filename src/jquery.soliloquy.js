@@ -23,16 +23,14 @@ http://github.com/devth/soliloquy
     
     // API MODULES
     var twitter = function ( username, options ) {
-      var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_twitter, options);
-      settings = jQuery.extend( {}, settings_twitter, settings );
+      var settings = prepare_settings( jQuery.fn.soliloquy.options_twitter, options, settings_twitter );
       settings.username = username;
       
       api_call( settings, jq );
     };
     
     var twitter_list = function ( username, listname, options ) {
-      var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_twitter_list, options);
-      settings = jQuery.extend({}, settings_twitter_list, settings);
+      var settings = prepare_settings( jQuery.fn.soliloquy.options_twitter_list, options, settings_twitter_list );
       settings.username = username;
       settings.listname = listname;
 
@@ -40,8 +38,7 @@ http://github.com/devth/soliloquy
     };
     
     var lastfm = function ( options ) {
-      var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_lastfm, options);
-      settings = jQuery.extend( {}, settings_lastfm, settings );
+      var settings = prepare_settings( jQuery.fn.soliloquy.options_lastfm, options, settings_lastfm );
 
       api_call( settings, jq );
     };
@@ -87,6 +84,26 @@ http://github.com/devth/soliloquy
   {
     return $([ postText ]).linkUrl().linkUser().linkHash()[0];
   }
+  function build_date_string( parsed_date, relative )
+  {
+    if ( relative ) return relative_time( parsed_date );
+    else
+    {
+      var localOffset = new Date().getTimezoneOffset() * 60000;
+      var date_time = new Date(parsed_date - localOffset);
+      var minutes, hours, ampm;
+      if ( (date_time.getHours()) > 12 ){
+        hours = (date_time.getHours()) - 12;
+        ampm = "pm";
+      } else {
+        hours = (date_time.getHours() == 0) ? 12 : date_time.getHours();
+        ampm = "am";
+      }
+      minutes = (date_time.getMinutes().toString().length == 1) ? "0" + date_time.getMinutes() : date_time.getMinutes();
+      return ((date_time.getMonth() + 1) + "/" + (date_time.getDate()) + "/" + date_time.getFullYear() + 
+              " " + (hours) + ":" + minutes + ampm);
+    }
+  }
   function relative_time( parsed_date )
   {
     var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
@@ -110,6 +127,12 @@ http://github.com/devth/soliloquy
   }
 
   // API HELPER
+  function prepare_settings( options_default, options_override, settings_internal ){
+    var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_global, options_default);
+    settings = jQuery.extend({}, settings, options_override);
+    settings = jQuery.extend({}, settings, settings_internal);
+    return settings;
+  }
   function api_call( settings, jq ) {
     settings.api = settings.api.supplant( settings ); // POPULATE dynamic bits
   
@@ -144,7 +167,7 @@ http://github.com/devth/soliloquy
     time_value = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
     var parsed_date = Date.parse(time_value);
     
-    html += " <span class='created-at'>" + relative_time( parsed_date ) + "</span>";
+    html += " <span class='created-at'>" + build_date_string( parsed_date, settings.relative_dates ) + "</span>";
     html += "</div>";
     return html;
   }
@@ -160,7 +183,7 @@ http://github.com/devth/soliloquy
     if ( post.date )
     {
       parsed_date = new Date( post.date['#text'] );
-      date_string = relative_time( parsed_date )
+      date_string = build_date_string( parsed_date, settings.relative_dates )
     }
     html += " <span class='created-at'>" +  date_string + "</span>";
     html += "</div>";
@@ -172,6 +195,9 @@ http://github.com/devth/soliloquy
   // DEFAULTS
   
   // PUBLIC
+  jQuery.fn.soliloquy.options_global = {
+    relative_dates: true
+  };
   jQuery.fn.soliloquy.options_twitter = {
     posts: 10
   };
@@ -182,7 +208,7 @@ http://github.com/devth/soliloquy
     tracks: 10,
     username: 'trevorhartman',
     api_key: '930dbe080df156eb81444b27a63d948b',
-    label_listening_now: 'Now Playing'
+    label_listening_now: 'now playing'
   }
   
   // INTERNAL
