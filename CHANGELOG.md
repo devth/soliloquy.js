@@ -1,3 +1,7 @@
+## 0.4.1
+* Added relative_time option
+* Prepared options and settings merging using a method prepare_setting
+
 # 0.4.0
 Refactored api calls abstracting unique bits into settings and options.
 
