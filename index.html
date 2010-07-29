@@ -10,6 +10,7 @@
     <script type="text/javascript" charset="utf-8">
       $(function()
       {  
+        $('.feed').soliloquy().facebook( { username: 'NPR', relative_dates: false } );
         $('.feed').soliloquy().twitter( 'devth', { posts: 5, relative_dates: false } );
         $('.feed').soliloquy().twitter_list( 'rails', 'core', { posts: 2 } );
         $('.feed').soliloquy().lastfm( { relative_dates: false });
@@ -21,8 +22,12 @@
       h1 { text-align:center; color: #ddd;  margin:40px 0; font-size:120px; }
       
       .feed { width: 800px; margin: auto;}
-      .feed div { font-size: 20px; margin:20px; color:#333; }
+      .feed .post { clear: both; font-size: 20px; margin:20px; color:#333; }
+
       
+      .thumbnail { float: left; display: block; padding: 0 10px 10px 10px; }
+      .post_content { display: table-cell }
+
       .created-at { font-size:70%; color:#666;}
       .screen-name { font-weight: bold; }
       
