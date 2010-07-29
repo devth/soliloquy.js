@@ -1,3 +1,6 @@
+## 0.4.2
+* Added facebook support
+
 ## 0.4.1
 * Added relative_time option
 * Prepared options and settings merging using a method prepare_setting
