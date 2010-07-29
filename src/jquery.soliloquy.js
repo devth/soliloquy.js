@@ -276,7 +276,7 @@ http://github.com/devth/soliloquy
     data_handler: handle_lastfm_data
   };
   var settings_facebook = {
-    api: 'https://graph.facebook.com/{username}/feed?callback=?',
+    api: 'https://graph.facebook.com/{username}/feed?limit={posts}&callback=?',
     post_builder: buildFacebookPost,
     data_handler: handle_facebook_data
   }
