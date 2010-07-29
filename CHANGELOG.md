@@ -1,3 +1,6 @@
+## 0.4.3
+* Enforced posts option on facebook feed
+
 ## 0.4.2
 * Added facebook support
 
