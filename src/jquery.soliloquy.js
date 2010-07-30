@@ -203,7 +203,7 @@ http://github.com/devth/soliloquy
     var raw_date = post.created_time;
 
     var year = raw_date.substr(0,4);
-    var month = raw_date.substr(5,2);
+    var month = raw_date.substr(5,2) - 1;
     var day = raw_date.substr(8,2);
     var hour = raw_date.substr(11,2);
     var minute = raw_date.substr(14,2);
