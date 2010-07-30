@@ -106,7 +106,7 @@ http://github.com/devth/soliloquy
       }
       minutes = (date_time.getMinutes().toString().length == 1) ? "0" + date_time.getMinutes() : date_time.getMinutes();
       return ((date_time.getMonth() + 1) + "/" + (date_time.getDate()) + "/" + date_time.getFullYear() + 
-              " " + (hours) + ":" + minutes + ampm);
+              " at " + (hours) + ":" + minutes + ampm);
     }
   }
   function relative_time( parsed_date )
@@ -224,10 +224,32 @@ http://github.com/devth/soliloquy
       if ( post.type == "status" ){
         html += processPost( post.message );
       } else if ( post.type == "link" ){
-        html += '<div class="link"><a href="' + post.link + '">' + post.name + '</a></div>';
-        html += post.description;
+        if ( post.message ) html += '<span class="message">' + processPost(post.message) + '</span>';
+        if ( post.picture ){
+          html += '<div class="link-picture"><a href="' + post.link + '"><img src="' + post.picture + '"></a></div>';
+        }
+        html += '<div class="link-content"><a href="' + post.link + '">' + post.name + '</a><span class="description">' + post.description + '</span></div>';
+      } else if ( post.type == "photo" ){
+        html += '<span class="photo">';
+          html += post.message;
+          html += '<span class="picture">';
+            if ( post.link ) html += '<a href="' + post.link + '">';
+            html += '<img src="' + post.picture + '">';
+            if ( post.link ) html += '</a>';
+          html += '</span>';
+        html += '</span';
       }
-      html += " <span class='created-at'>" +  date_string + "</span>";
+      html += ' <span class="created-at">';
+      if ( post.icon ) html += '<img src="' + post.icon + '" /> ';
+      html += date_string + "</span>";
+
+
+      if ( post.comments ){
+        html += '<div class="comments">';
+        html += '</div>';
+      }
+      
+
     html += "</div>";
     html += '</div>';
     return html;
