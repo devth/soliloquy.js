@@ -225,7 +225,7 @@ http://github.com/devth/soliloquy
         if ( post.link && post.name ) html += '<div class="link-content"><a href="' + post.link + '">' + post.name + '</a><span class="description">' + post.description + '</span></div>';
       } else if ( post.type == "photo" ){
         html += '<span class="photo">';
-          html += post.message;
+          if ( post.message ) html += post.message;
           html += '<span class="picture">';
             if ( post.link ) html += '<a href="' + post.link + '">';
             html += '<img src="' + post.picture + '">';
