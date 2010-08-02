@@ -243,7 +243,7 @@ http://github.com/devth/soliloquy
           $.each( post.comments.data, function(index, comment){
             console.log( comment);
             
-            var commenter_thumb = "http://graph.facebook.com/" + comment.from.id + "/picture";
+            var commenter_thumb = "http://graph.facebook.com/" + comment.from.id + "/picture?type=square";
 
             html += '<div class="comment">';
               html += '<span class="picture">';
