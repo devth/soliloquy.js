@@ -1,5 +1,8 @@
+## 0.4.4
+* Displayed comments on facebok posts
+
 ## 0.4.3
-* Enforced posts option on facebook feed
+* Enforced posts option on facebook feed to limit the number of posts
 
 ## 0.4.2
 * Added facebook support
