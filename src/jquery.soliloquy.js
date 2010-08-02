@@ -202,21 +202,15 @@ http://github.com/devth/soliloquy
     // DATE
     var raw_date = post.created_time;
 
-    var year = raw_date.substr(0,4);
-    var month = raw_date.substr(5,2) - 1;
-    var day = raw_date.substr(8,2);
-    var hour = raw_date.substr(11,2);
-    var minute = raw_date.substr(14,2);
-    var second = raw_date.substr(17,2);
+    parsed_date = parse_facebook_date( raw_date );
 
     // console.log( new Date(year, month, day, hour, minute, second) );
     // console.log(year, month, day, hour, minute, second );
 
-    var date_string = build_date_string( new Date(year, month, day, hour, minute, second), settings.relative_dates );
+    var date_string = build_date_string( parsed_date, settings.relative_dates );
 
     var thumbnail = "http://graph.facebook.com/" + post.from.id + "/picture";
 
-    console.log( post.type );
     var html = '<div class="facebook post">';
     html += '<span class="thumbnail"><img src="' + thumbnail + '" alt="' + post.from.name + '" /></span>';
     html += '<div class="post_content">';
@@ -224,11 +218,11 @@ http://github.com/devth/soliloquy
       if ( post.type == "status" ){
         html += processPost( post.message );
       } else if ( post.type == "link" ){
-        if ( post.message ) html += '<span class="message">' + processPost(post.message) + '</span>';
+        if ( post.message ) html += '<span class="message">' + processPost(parse_facebook_newlines(post.message)) + '</span>';
         if ( post.picture ){
           html += '<div class="link-picture"><a href="' + post.link + '"><img src="' + post.picture + '"></a></div>';
         }
-        html += '<div class="link-content"><a href="' + post.link + '">' + post.name + '</a><span class="description">' + post.description + '</span></div>';
+        if ( post.link && post.name ) html += '<div class="link-content"><a href="' + post.link + '">' + post.name + '</a><span class="description">' + post.description + '</span></div>';
       } else if ( post.type == "photo" ){
         html += '<span class="photo">';
           html += post.message;
@@ -244,8 +238,26 @@ http://github.com/devth/soliloquy
       html += date_string + "</span>";
 
 
-      if ( post.comments ){
+      if ( post.comments && $.isArray( post.comments.data ) ){
         html += '<div class="comments">';
+          $.each( post.comments.data, function(index, comment){
+            console.log( comment);
+            
+            var commenter_thumb = "http://graph.facebook.com/" + comment.from.id + "/picture";
+
+            html += '<div class="comment">';
+              html += '<span class="picture">';
+                html += '<img src="' + commenter_thumb + '" />';
+              html += '</span>';
+              html += '<span class="comment-content">';
+                html += '<span class="screen-name">' + comment.from.name + '</span> ';
+                html += processPost( parse_facebook_newlines(comment.message) );
+              html += '</span>';
+              html += ' <span class="created-at">' + date_string + "</span>";
+          
+
+            html += '</div>';
+          });
         html += '</div>';
       }
       
@@ -255,6 +267,18 @@ http://github.com/devth/soliloquy
     return html;
   }
 
+  function parse_facebook_newlines( message ){
+    return message.replace(/\n/g, '<br>');
+  }
+  function parse_facebook_date( raw_date ){
+    var year = raw_date.substr(0,4);
+    var month = raw_date.substr(5,2) - 1;
+    var day = raw_date.substr(8,2);
+    var hour = raw_date.substr(11,2);
+    var minute = raw_date.substr(14,2);
+    var second = raw_date.substr(17,2);
+    return new Date(year, month, day, hour, minute, second);
+  }
 
 
 
