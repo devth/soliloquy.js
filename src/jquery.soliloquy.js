@@ -37,8 +37,10 @@ http://github.com/devth/soliloquy
       api_call( settings, jq );
     };
     
-    var lastfm = function ( options ) {
+    var lastfm = function ( username, api_key, options ) {
       var settings = prepare_settings( jQuery.fn.soliloquy.options_lastfm, options, settings_lastfm );
+      settings.username = username;
+      settings.api_key = api_key;
 
       api_call( settings, jq );
     };
@@ -286,8 +288,6 @@ http://github.com/devth/soliloquy
   });
   jQuery.fn.soliloquy.options_lastfm = {
     tracks: 10,
-    username: 'trevorhartman',
-    api_key: '930dbe080df156eb81444b27a63d948b',
     label_listening_now: 'now playing'
   }
   jQuery.fn.soliloquy.options_facebook = {
@@ -309,6 +309,8 @@ http://github.com/devth/soliloquy
   var settings_lastfm = {
     api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={api_key}&limit={tracks}&format=json&callback=?',
     post_builder: build_lastfm_post,
+    username: '',
+    api_key: '',
     data_handler: function handle_lastfm_data(data, settings, jq){
       $.each(data.recenttracks.track, function(i, item){
         $(jq).append( settings.post_builder( item, settings ));
