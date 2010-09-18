@@ -241,7 +241,7 @@ http://github.com/devth/soliloquy
       if ( post.comments && $.isArray( post.comments.data ) ){
         html += '<div class="comments">';
           $.each( post.comments.data, function(index, comment){
-            console.log( comment);
+            // console.log( comment);
             
             var commenter_thumb = "http://graph.facebook.com/" + comment.from.id + "/picture?type=square";
 
