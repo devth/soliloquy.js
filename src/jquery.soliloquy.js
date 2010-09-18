@@ -60,7 +60,7 @@ http://github.com/devth/soliloquy
 
   // HELPERS
   $.fn.extend({
-    linkUrl: function() {
+    link_url: function() {
       var returning = [];
       var regexp = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
       this.each(function() {
@@ -68,7 +68,7 @@ http://github.com/devth/soliloquy
       });
       return $(returning);
     },
-    linkUser: function() {
+    link_user: function() {
       var returning = [];
       var regexp = /[\@]+([A-Za-z0-9-_]+)/gi;
       this.each(function() {
@@ -76,7 +76,7 @@ http://github.com/devth/soliloquy
       });
       return $(returning);
     },
-    linkHash: function() {
+    link_hash: function() {
       var returning = [];
       var regexp = / [\#]+([A-Za-z0-9-_]+)/gi;
       this.each(function() {
@@ -85,9 +85,9 @@ http://github.com/devth/soliloquy
       return $(returning);
     }
   });
-  function processPost( postText )
+  function process_post( postText )
   {
-    return $([ postText ]).linkUrl().linkUser().linkHash()[0];
+    return $([ postText ]).link_url().link_user().link_hash()[0];
   }
   function build_date_string( parsed_date, relative )
   {
@@ -156,11 +156,11 @@ http://github.com/devth/soliloquy
   
     
   // POST BUILDERS
-  function buildTwitterPost( post, settings ){
+  function build_twitter_post( post, settings ){
     // console.log( post.created_at );
     var html = "<div class='twitter post'>";
     html += "<span class='screen-name'>" + post.user['screen_name'] + "</span> ";
-    html += processPost( post.text );
+    html += process_post( post.text );
     
     var values = post.created_at.split(" ");
     time_value = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
@@ -170,7 +170,7 @@ http://github.com/devth/soliloquy
     html += "</div>";
     return html;
   }
-  function buildLastFmPost( post, settings ){
+  function build_lastfm_post( post, settings ){
     // console.log( post );
     var html = "<div class='lastfm post'>";
     if ( settings ) html += "<span class='screen-name'>" + settings.username + "</span> ";
@@ -187,7 +187,7 @@ http://github.com/devth/soliloquy
     html += "</div>";
     return html;
   }
-  function buildFacebookPost( post, settings ){
+  function build_facebook_post( post, settings ){
     
     // DATE
     var raw_date = post.created_time;
@@ -206,9 +206,9 @@ http://github.com/devth/soliloquy
     html += '<div class="post_content">';
       html += '<span class="screen-name">' + post.from.name + '</span> ';
       if ( post.type == "status" ){
-        html += processPost( post.message );
+        html += process_post( post.message );
       } else if ( post.type == "link" ){
-        if ( post.message ) html += '<span class="message">' + processPost(parse_facebook_newlines(post.message)) + '</span>';
+        if ( post.message ) html += '<span class="message">' + process_post(parse_facebook_newlines(post.message)) + '</span>';
         if ( post.picture ){
           html += '<div class="link-picture"><a href="' + post.link + '"><img src="' + post.picture + '"></a></div>';
         }
@@ -241,7 +241,7 @@ http://github.com/devth/soliloquy
               html += '</span>';
               html += '<span class="comment-content">';
                 html += '<span class="screen-name">' + comment.from.name + '</span> ';
-                html += processPost( parse_facebook_newlines(comment.message) );
+                html += process_post( parse_facebook_newlines(comment.message) );
               html += '</span>';
               html += ' <span class="created-at">' + date_string + "</span>";
           
@@ -297,18 +297,18 @@ http://github.com/devth/soliloquy
   // INTERNAL
   var settings_twitter = {
     api: "http://twitter.com/status/user_timeline/{username}.json?count={posts}&callback=?",
-    post_builder: buildTwitterPost,
+    post_builder: build_twitter_post,
     username: ''
   };
   var settings_twitter_list = {
     api: "http://api.twitter.com/1/{username}/lists/{listname}/statuses.json?per_page={posts}&callback=?",
-    post_builder: buildTwitterPost,
+    post_builder: build_twitter_post,
     username: '',
     listname: ''
   };
   var settings_lastfm = {
     api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={api_key}&limit={tracks}&format=json&callback=?',
-    post_builder: buildLastFmPost,
+    post_builder: build_lastfm_post,
     data_handler: function handle_lastfm_data(data, settings, jq){
       $.each(data.recenttracks.track, function(i, item){
         $(jq).append( settings.post_builder( item, settings ));
@@ -317,7 +317,7 @@ http://github.com/devth/soliloquy
   };
   var settings_facebook = {
     api: 'https://graph.facebook.com/{username}/feed?limit={posts}&callback=?',
-    post_builder: buildFacebookPost,
+    post_builder: build_facebook_post,
     data_handler: function (data, settings, jq){
       $.each(data.data, function (i, item){
         $(jq).append( settings.post_builder(item, settings) );
