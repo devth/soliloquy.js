@@ -153,16 +153,6 @@ http://github.com/devth/soliloquy
       $(jq).append( settings.post_builder.call( this, item, settings ));
     });
   }
-  function handle_lastfm_data(data, settings, jq){
-    $.each(data.recenttracks.track, function(i, item){
-      $(jq).append( buildLastFmPost( item, settings ));
-    });
-  };
-  function handle_facebook_data(data, settings, jq){
-    $.each(data.data, function (i, item){
-      $(jq).append( settings.post_builder(item, settings) );
-    });
-  }
   
     
   // POST BUILDERS
@@ -319,12 +309,21 @@ http://github.com/devth/soliloquy
   var settings_lastfm = {
     api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={api_key}&limit={tracks}&format=json&callback=?',
     post_builder: buildLastFmPost,
-    data_handler: handle_lastfm_data
+    data_handler: function handle_lastfm_data(data, settings, jq){
+      $.each(data.recenttracks.track, function(i, item){
+        $(jq).append( settings.post_builder( item, settings ));
+      });
+    }
   };
   var settings_facebook = {
     api: 'https://graph.facebook.com/{username}/feed?limit={posts}&callback=?',
     post_builder: buildFacebookPost,
-    data_handler: handle_facebook_data
+    data_handler: function (data, settings, jq){
+      $.each(data.data, function (i, item){
+        $(jq).append( settings.post_builder(item, settings) );
+      });
+    }
+    
   }
   
 })(jQuery);
