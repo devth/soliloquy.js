@@ -9,8 +9,7 @@ For a working demo, visit the [project page](http://devth.github.com/soliloquy/)
 ## Usage
 
     <script type="text/javascript" charset="utf-8"> 
-      $(function()
-      {  
+      $(function(){  
         $('.feed').soliloquy().facebook( { username: 'CriterionCollection', posts: 8, relative_dates: false } );
         $('.feed').soliloquy().twitter( 'devth', { posts: 5, relative_dates: false } );
         $('.feed').soliloquy().twitter_list( 'rails', 'core', { posts: 2 } );
