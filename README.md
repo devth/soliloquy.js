@@ -17,10 +17,10 @@ The abstracted architecture makes it simple to add new data sources as they come
 
 Soliloquy currently supports the following solos:
 
-* Twitter
-* Twitter Lists
-* Last.fm plays
-* Facebook wall feeds
+* Twitter `twitter(username, options)`
+* Twitter Lists `twitter_list(username, listname, options)`
+* Last.fm plays `lastfm(username, api_key, options)`
+* Facebook wall feeds `facebook(options)`
 
 ## Contributing
 Fork the project, add a module and send a pull request.
