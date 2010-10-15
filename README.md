@@ -4,6 +4,19 @@ Soliloquy is a jQuery plugin that aggregates posts from various data sources and
 ## Demo
 For a working demo, visit the [project page](http://devth.github.com/soliloquy/)
 
+## Usage
+
+    <script type="text/javascript" charset="utf-8"> 
+      $(function()
+      {  
+        $('.feed').soliloquy().facebook( { username: 'CriterionCollection', posts: 8, relative_dates: false } );
+        $('.feed').soliloquy().twitter( 'devth', { posts: 5, relative_dates: false } );
+        $('.feed').soliloquy().twitter_list( 'rails', 'core', { posts: 2 } );
+        $('.feed').soliloquy().lastfm( 'trevorhartman', '####', { relative_dates: false });
+      });
+    </script> 
+    <div class="feed"></div> 
+
 ## Solos
 A `solo` is a data source accessed via an API. Soliloquy's goal is to support many solos and make it
 extremely quick and easy to add additional solos.
@@ -21,34 +34,6 @@ Soliloquy currently supports the following solos:
 * Twitter Lists `twitter_list(username, listname, options)`
 * Last.fm plays `lastfm(username, api_key, options)`
 * Facebook wall feeds `facebook(options)`
-
-## Usage
-
-    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-      "http://www.w3.org/TR/html4/loose.dtd"> 
-    <html> 
-      <head> 
-        <title>Barebones - Soliloquy</title> 
-        <meta http-equiv="Content-Type" Content="text/html; charset=UTF-8" /> 
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"
-          type="text/javascript" charset="utf-8"></script> 
-        <script src="js/jquery.soliloquy.js" type="text/javascript" charset="utf-8"></script> 
-        <script type="text/javascript" charset="utf-8"> 
-          $(function()
-          {  
-            $('.feed').soliloquy().facebook( { username: 'CriterionCollection', posts: 8, relative_dates: false } );
-            $('.feed').soliloquy().twitter( 'devth', { posts: 5, relative_dates: false } );
-            $('.feed').soliloquy().twitter_list( 'rails', 'core', { posts: 2 } );
-            $('.feed').soliloquy().lastfm( 'trevorhartman', '####', { relative_dates: false });
-          });
-        </script> 
-      </head> 
-      <body> 
-        <div class="feed"></div> 
-      </body> 
-    </html> 
-
-
 
 ## Contributing
 Fork the project, add a module and send a pull request.
