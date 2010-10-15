@@ -30,7 +30,8 @@ Soliloquy currently supports the following solos:
       <head> 
         <title>Barebones - Soliloquy</title> 
         <meta http-equiv="Content-Type" Content="text/html; charset=UTF-8" /> 
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js" type="text/javascript" charset="utf-8"></script> 
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"
+          type="text/javascript" charset="utf-8"></script> 
         <script src="js/jquery.soliloquy.js" type="text/javascript" charset="utf-8"></script> 
         <script type="text/javascript" charset="utf-8"> 
           $(function()
