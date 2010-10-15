@@ -38,7 +38,7 @@ Soliloquy currently supports the following solos:
 * Facebook wall feeds `facebook(options)`
 
 ## Contributing
-Fork the project, add a module and send a pull request.
+Fork the project, add/update solos and send a pull request.
 
 ## License
 Copyright (c) 2010 Trevor C. Hartman<br>
