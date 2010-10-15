@@ -21,14 +21,14 @@ http://github.com/devth/soliloquy
     var $this = $(this);
     var jq = this;
     
-    // API MODULES
+    // SOLOS
     var twitter = function ( username, options ) {
       var settings = prepare_settings( jQuery.fn.soliloquy.options_twitter, options, settings_twitter );
       settings.username = username;
       
       api_call( settings, jq );
     };
-    
+
     var twitter_list = function ( username, listname, options ) {
       var settings = prepare_settings( jQuery.fn.soliloquy.options_twitter_list, options, settings_twitter_list );
       settings.username = username;
