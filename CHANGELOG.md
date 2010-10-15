@@ -1,3 +1,6 @@
+## 0.4.5
+* Update README with Usage and Solos documentation
+
 ## 0.4.4
 * Displayed comments on facebok posts
 
