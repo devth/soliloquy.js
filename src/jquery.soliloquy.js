@@ -262,6 +262,17 @@ http://github.com/devth/soliloquy
 
 
 
+  var solos = {
+    // FACEBOOK
+    
+    // TWITTER
+
+    // TWITTER LISTS
+
+    // LASTFM
+    
+  };
+
   // DEFAULTS
   
   // PUBLIC
