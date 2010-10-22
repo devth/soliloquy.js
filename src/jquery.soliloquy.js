@@ -261,23 +261,70 @@ http://github.com/devth/soliloquy
   }
 
 
+  // DECLARE SOLOS
+  var solos = {};
 
-  var solos = {
-    // FACEBOOK
-    
-    // TWITTER
-
-    // TWITTER LISTS
-
-    // LASTFM
-    
+  // FACEBOOK
+  solos["facebook"] = {
+    settings: {
+      api: 'https://graph.facebook.com/{username}/feed?limit={posts}&callback=?',
+      post_builder: build_facebook_post,
+      data_handler: function (data, settings, jq){
+        $.each(data.data, function (i, item){
+          $(jq).append(settings.post_builder(item, settings));
+        });
+      }
+    },
+    options: {
+    }
   };
+  // TWITTER
+  solos["twitter"] = {
+    settings = {
+      api: "http://twitter.com/status/user_timeline/{username}.json?count={posts}&callback=?",
+      post_builder: build_twitter_post,
+      username: ''
+    },
+    options: {
+      posts: 10
+    }
+  };
+  // TWITTER LISTS
+  solos["twitter_list"] = {
+    settings = {
+      api: "http://api.twitter.com/1/{username}/lists/{listname}/statuses.json?per_page={posts}&callback=?",
+      post_builder: build_twitter_post,
+      username: '',
+      listname: ''
+    },
+    options: {
+    }
+  };
+  // LASTFM
+  solos["last_fm"] = {
+    settings_lastfm = {
+      api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={api_key}&limit={tracks}&format=json&callback=?',
+      post_builder: build_lastfm_post,
+      username: '',
+      api_key: '',
+      data_handler: function handle_lastfm_data(data, settings, jq){
+        $.each(data.recenttracks.track, function(i, item){
+          $(jq).append(settings.post_builder(item, settings));
+        });
+      }
+    },
+    options: {
+      label_listening_now: 'now playing'
+    }
+  };
+
 
   // DEFAULTS
   
   // PUBLIC
   jQuery.fn.soliloquy.options_global = {
-    relative_dates: true
+    relative_dates: true,
+    posts: 10
   };
   jQuery.fn.soliloquy.options_twitter = {
     posts: 10
