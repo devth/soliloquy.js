@@ -20,42 +20,25 @@ http://github.com/devth/soliloquy
   jQuery.fn.soliloquy = function () {
     var $this = $(this);
     var jq = this;
-    
-    // SOLOS
-    var twitter = function (username, options) {
-      var settings = prepare_settings(jQuery.fn.soliloquy.options_twitter, options, settings_twitter);
-      settings.username = username;
-      
-      api_call(settings, jq);
-    };
 
-    var twitter_list = function (username, listname, options) {
-      var settings = prepare_settings(jQuery.fn.soliloquy.options_twitter_list, options, settings_twitter_list);
-      settings.username = username;
-      settings.listname = listname;
+    var public_methods = {};
+    // BUILD PUBLIC METHODS
+    for (solo_name in solos){
+      var solo = solos[solo_name];
 
-      api_call(settings, jq);
-    };
-    
-    var lastfm = function (username, api_key, options) {
-      var settings = prepare_settings(jQuery.fn.soliloquy.options_lastfm, options, settings_lastfm);
-      settings.username = username;
-      settings.api_key = api_key;
+      public_methods[solo_name] = solo_interface(solo_name, solo);
+    }
 
-      api_call(settings, jq);
-    };
-    var facebook = function (options){
-      var settings = prepare_settings(jQuery.fn.soliloquy.options_facebook, options, settings_facebook);
-      api_call(settings, jq);
-    };
-    
-    // EXPOSE APIs
-    return {
-      twitter: twitter,
-      twitter_list: twitter_list,
-      lastfm: lastfm,
-      facebook: facebook
-    };
+    function solo_interface(solo_name, solo){
+      return function(options){
+        var settings = prepare_settings(solo.options, options, solo.settings);
+        api_call(settings, jq);
+        return jq;
+      };
+    }
+
+
+    return public_methods;
     
   };
 
@@ -280,7 +263,7 @@ http://github.com/devth/soliloquy
   };
   // TWITTER
   solos["twitter"] = {
-    settings = {
+    settings: {
       api: "http://twitter.com/status/user_timeline/{username}.json?count={posts}&callback=?",
       post_builder: build_twitter_post,
       username: ''
@@ -291,7 +274,7 @@ http://github.com/devth/soliloquy
   };
   // TWITTER LISTS
   solos["twitter_list"] = {
-    settings = {
+    settings: {
       api: "http://api.twitter.com/1/{username}/lists/{listname}/statuses.json?per_page={posts}&callback=?",
       post_builder: build_twitter_post,
       username: '',
@@ -302,11 +285,9 @@ http://github.com/devth/soliloquy
   };
   // LASTFM
   solos["last_fm"] = {
-    settings_lastfm = {
+    settings: {
       api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={api_key}&limit={tracks}&format=json&callback=?',
       post_builder: build_lastfm_post,
-      username: '',
-      api_key: '',
       data_handler: function handle_lastfm_data(data, settings, jq){
         $.each(data.recenttracks.track, function(i, item){
           $(jq).append(settings.post_builder(item, settings));
@@ -314,64 +295,10 @@ http://github.com/devth/soliloquy
       }
     },
     options: {
-      label_listening_now: 'now playing'
+      label_listening_now: 'now playing',
+      username: '',
+      api_key: ''
     }
   };
 
-
-  // DEFAULTS
-  
-  // PUBLIC
-  jQuery.fn.soliloquy.options_global = {
-    relative_dates: true,
-    posts: 10
-  };
-  jQuery.fn.soliloquy.options_twitter = {
-    posts: 10
-  };
-  jQuery.fn.soliloquy.options_twitter_list = jQuery.extend({}, jQuery.fn.soliloquy.options_twitter, {
-
-  });
-  jQuery.fn.soliloquy.options_lastfm = {
-    tracks: 10,
-    label_listening_now: 'now playing'
-  }
-  jQuery.fn.soliloquy.options_facebook = {
-    username: ''
-  }
-  
-  // INTERNAL
-  var settings_twitter = {
-    api: "http://twitter.com/status/user_timeline/{username}.json?count={posts}&callback=?",
-    post_builder: build_twitter_post,
-    username: ''
-  };
-  var settings_twitter_list = {
-    api: "http://api.twitter.com/1/{username}/lists/{listname}/statuses.json?per_page={posts}&callback=?",
-    post_builder: build_twitter_post,
-    username: '',
-    listname: ''
-  };
-  var settings_lastfm = {
-    api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={api_key}&limit={tracks}&format=json&callback=?',
-    post_builder: build_lastfm_post,
-    username: '',
-    api_key: '',
-    data_handler: function handle_lastfm_data(data, settings, jq){
-      $.each(data.recenttracks.track, function(i, item){
-        $(jq).append(settings.post_builder(item, settings));
-      });
-    }
-  };
-  var settings_facebook = {
-    api: 'https://graph.facebook.com/{username}/feed?limit={posts}&callback=?',
-    post_builder: build_facebook_post,
-    data_handler: function (data, settings, jq){
-      $.each(data.data, function (i, item){
-        $(jq).append(settings.post_builder(item, settings));
-      });
-    }
-    
-  }
-  
 })(jQuery);
