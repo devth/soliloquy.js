@@ -265,10 +265,10 @@ http://github.com/devth/soliloquy
   solos["twitter"] = {
     settings: {
       api: "http://twitter.com/status/user_timeline/{username}.json?count={posts}&callback=?",
-      post_builder: build_twitter_post,
-      username: ''
+      post_builder: build_twitter_post
     },
     options: {
+      username: '',
       posts: 10
     }
   };
@@ -276,11 +276,11 @@ http://github.com/devth/soliloquy
   solos["twitter_list"] = {
     settings: {
       api: "http://api.twitter.com/1/{username}/lists/{listname}/statuses.json?per_page={posts}&callback=?",
-      post_builder: build_twitter_post,
-      username: '',
-      listname: ''
+      post_builder: build_twitter_post
     },
     options: {
+      username: '',
+      listname: ''
     }
   };
   // LASTFM
