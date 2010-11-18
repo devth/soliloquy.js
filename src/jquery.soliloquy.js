@@ -17,7 +17,7 @@ http://github.com/devth/soliloquy
     );
   };
 
-  jQuery.fn.soliloquy = function () {
+  jQuery.fn.soliloquy = jQuery.fn.slq = function () {
     var $this = $(this);
     var jq = this;
 
