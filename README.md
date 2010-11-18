@@ -4,16 +4,17 @@ and outputs them as structured HTML. It makes no assumptions about your design o
 preferences and defaults to a minimalistic layout that's ready to be styled with CSS.
 
 ## Demo
-For a working demo, visit the [project page](http://devth.github.com/soliloquy/)
+See [project page](http://devth.github.com/soliloquy/)
 
 ## Usage
 
     <script type="text/javascript" charset="utf-8"> 
       $(function(){  
-        $('.feed').soliloquy().facebook( { username: 'CriterionCollection', posts: 8, relative_dates: false } );
-        $('.feed').soliloquy().twitter( 'devth', { posts: 5, relative_dates: false } );
-        $('.feed').soliloquy().twitter_list( 'rails', 'core', { posts: 2 } );
-        $('.feed').soliloquy().lastfm( 'trevorhartman', '####', { relative_dates: false });
+        $('.feed')
+          .slq().facebook({ username: 'CriterionCollection', posts: 8, relative_dates: false } )
+          .slq().twitter({username: 'devth', posts: 6, relative_dates: false })
+          .slq().twitter_list({username: 'rails', listname: 'core', posts: 2 })
+          .slq().last_fm({ username: 'trevorhartman', api_key: '930dbe080df156eb81444b27a63d948b', relative_dates: false });
       });
     </script> 
     <div class="feed"></div> 
@@ -31,13 +32,13 @@ The abstracted architecture makes it simple to add new data sources as they come
 
 Soliloquy currently supports the following solos:
 
-* Twitter `twitter(username, options)`
-* Twitter Lists `twitter_list(username, listname, options)`
-* Last.fm plays `lastfm(username, api_key, options)`
+* Twitter `twitter(options)`
+* Twitter Lists `twitter_list(options)`
+* Last.fm plays `lastfm(options)`
 * Facebook wall feeds `facebook(options)`
 
 ## Contributing
-Fork the project, add/update solos and send a pull request.
+Fork the project, add/improve solos and send a pull request.
 
 ## License
 Copyright (c) 2010 Trevor C. Hartman<br>
