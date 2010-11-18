@@ -25,7 +25,6 @@ http://github.com/devth/soliloquy
     // BUILD PUBLIC METHODS
     for (solo_name in solos){
       var solo = solos[solo_name];
-
       public_methods[solo_name] = solo_interface(solo_name, solo);
     }
 
@@ -168,9 +167,7 @@ http://github.com/devth/soliloquy
     
     // DATE
     var raw_date = post.created_time;
-
     parsed_date = parse_facebook_date(raw_date);
-
     var date_string = build_date_string(parsed_date, settings.relative_dates);
 
     var thumbnail = "http://graph.facebook.com/" + post.from.id + "/picture";
@@ -229,7 +226,6 @@ http://github.com/devth/soliloquy
     html += '</div>';
     return html;
   }
-
   function parse_facebook_newlines(message){
     return message.replace(/\n/g, '<br>');
   }
@@ -300,5 +296,8 @@ http://github.com/devth/soliloquy
       api_key: ''
     }
   };
+
+
+  // HELPERS
 
 })(jQuery);
