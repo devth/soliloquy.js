@@ -1,3 +1,6 @@
+# 0.5.0
+* Restructure soliloquy core to handle modular "solos"
+
 ## 0.4.5
 * Update README with Usage and Solos documentation
 
