@@ -25,12 +25,12 @@ extremely quick and easy to add additional solos.
 
 To facilitate this, AJAX data retrieval is abstracted away as much as possible, leaving the absolute necessary pieces to be described for each module.
 
+Each solo is comprised of:
 
+* Options: public options allowing user to set required fields (e.g. `username` on `twitter`) and optional settings (e.g. `relative_dates: false`).
+* Settings: internal settings that include properties such as the external API url and the local function to parse the data and create the HTML.
 
-* Options -- public options allowing user to set required fields (e.g. `username` on `twitter`) and optional settings (e.g. `relative_dates: false`).
-* Settings -- internal settings that include properties such as the external API url and the local function to parse the data and create the HTML.
-
-The abstracted architecture makes it simple to add new data sources as they come along. See the solos section of the source for examples.
+The soliloquy core then parses these objects and provides an interface for a user to call them. The abstracted architecture makes it simple to add new data sources as they come along. See the [solos section](https://github.com/devth/soliloquy/blob/master/src/jquery.soliloquy.js#L243-298) of the source for examples.
 
 Soliloquy currently supports the following solos:
 
