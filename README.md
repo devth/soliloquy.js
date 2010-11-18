@@ -21,11 +21,7 @@ See [project page](http://devth.github.com/soliloquy/)
 
 ## Solos
 A `solo` is a data source accessed via an API. Soliloquy's goal is to support many solos and make it
-extremely quick and easy to add additional solos.
-
-To facilitate this, AJAX data retrieval is abstracted away as much as possible, leaving the absolute necessary pieces to be described for each module.
-
-Each solo is comprised of:
+extremely quick and easy to add additional solos. To facilitate this, AJAX data retrieval is abstracted away as much as possible, leaving the absolute necessary pieces to be described for each module. Each solo is comprised of:
 
 * Options: public options allowing user to set required fields (e.g. `username` on `twitter`) and optional settings (e.g. `relative_dates: false`).
 * Settings: internal settings that include properties such as the external API url and the local function to parse the data and create the HTML.
