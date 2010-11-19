@@ -19,11 +19,8 @@
           .slq().last_fm({ username: 'trevorhartman', api_key: '930dbe080df156eb81444b27a63d948b', relative_dates: false });
 
         $('h1').hover(function(){
-          $('.english').hide();
-          $('.japanese').show();
-        }, function(){
-          $('.english').show();
-          $('.japanese').hide();
+          $('.english').toggle();
+          $('.japanese').toggle();
         });
 
       });
