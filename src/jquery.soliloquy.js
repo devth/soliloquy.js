@@ -1,14 +1,14 @@
-/*jslint indent: 2 */
-/*
-Soliloquy - a jQuery plugin for aggregating posts from many data sources
-Copyright (c) 2010 Trevor C. Hartman
-Released under MIT License
-http://github.com/devth/soliloquy
-*/
+// **Soliloquy** is a jQuery plugin for aggregating posts from many data sources
+//
+//     Copyright (c) 2010 Trevor C. Hartman
+//     Released under MIT License
+//     http://github.com/devth/soliloquy
+
 
 (function ($) {
-  
-  String.prototype.supplant = function (o) { // Crockford's supplant from http://javascript.crockford.com/remedial.html
+
+  // Crockford's [supplant](http://javascript.crockford.com/remedial.html)
+  String.prototype.supplant = function (o) { 
     return this.replace(/{([^{}]*)}/g,
       function (a, b) {
         var r = o[b];
@@ -17,12 +17,15 @@ http://github.com/devth/soliloquy
     );
   };
 
+  // ## Soliloquy's public interface
   jQuery.fn.soliloquy = jQuery.fn.slq = function () {
-    var $this = $(this);
+    // Save a reference to the jQuery object to work on
     var jq = this;
 
     var public_methods = {};
-    // BUILD PUBLIC METHODS
+    // Dynamically build public methods by looping through the solos data structure
+    // and using the `solo_interface` helper to built a scope over each solo's unique
+    // settings object. 
     for (solo_name in solos){
       var solo = solos[solo_name];
       public_methods[solo_name] = solo_interface(solo_name, solo);
@@ -32,17 +35,16 @@ http://github.com/devth/soliloquy
       return function(options){
         var settings = prepare_settings(solo.options, options, solo.settings);
         api_call(settings, jq);
+        // Return the jQuery object to provide chaining
         return jq;
       };
     }
 
-
     return public_methods;
-    
   };
 
 
-  // HELPERS
+  // ## Helpers
   $.fn.extend({
     link_url: function () {
       var returning = [];
@@ -110,17 +112,30 @@ http://github.com/devth/soliloquy
     
   }
 
-  // API HELPER
+  // ## API helpers
+
+  // `prepare_settings` uses `jQuery.extend` to merge three settings objects in
+  // increasing order of priority. 
+  // 
+  //   -  `options_default` provides a default set
+  //   -  `options_override` holds settings the user optionally specified when consuming Soliloquy
+  //   -  `settings_internal` holds the non-overridable internal settings used to call the API,
+  //   parse the data and render the output.
   function prepare_settings(options_default, options_override, settings_internal){
     var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_global, options_default);
     settings = jQuery.extend({}, settings, options_override);
     settings = jQuery.extend({}, settings, settings_internal);
     return settings;
   }
+
+  // `api_call` handles API calls for every solo by acting on its `settings` object
   function api_call(settings, jq) {
-    settings.api = settings.api.supplant(settings); // POPULATE dynamic bits
+    // Populate the `api` string with dynamic values
+    settings.api = settings.api.supplant(settings); 
   
+    // Retrive data from the API
     $.getJSON(settings.api, function (data) {
+      // Act upon every object the user selected (even though this will almost always be one object)
       return jq.each(function () { 
         if (settings.data_handler) settings.data_handler.call(this, data, settings, jq);
         else handle_data(data, settings, jq); 
@@ -134,7 +149,7 @@ http://github.com/devth/soliloquy
   }
   
     
-  // POST BUILDERS
+  // # Post builders
   function build_twitter_post(post, settings){
     var html = "<div class='twitter post'>";
     html += "<span class='screen-name'>" + post.user['screen_name'] + "</span> ";
@@ -165,7 +180,7 @@ http://github.com/devth/soliloquy
   }
   function build_facebook_post(post, settings) {
     
-    // DATE
+    // Parse date
     var raw_date = post.created_time;
     parsed_date = parse_facebook_date(raw_date);
     var date_string = build_date_string(parsed_date, settings.relative_dates);
@@ -240,10 +255,20 @@ http://github.com/devth/soliloquy
   }
 
 
-  // DECLARE SOLOS
+  // 
+  // # Solos
+  // Soliloquy uses a declarative data structure to hold each data source, or "solo". Each solo consists
+  // of several properties that tell Soliloquy where to fetch data, how to parse it, and how to
+  // render it into HTML. It provides an options interface to allow consumers of Soliloquy to
+  // customize their API calls. For example, the twitter solo provides a "posts" property that allows
+  // a user to specify how many twitter posts they'd like to retrieve.
+  //
+  // The declarative structure makes it quick and easy to add other APIs to Soliloquy. To contribute,
+  // use the existing solos as an example, test, and send a pull request.
+  //
   var solos = {};
 
-  // FACEBOOK
+  // ## Facebook
   solos["facebook"] = {
     settings: {
       api: 'https://graph.facebook.com/{username}/feed?limit={posts}&callback=?',
@@ -257,7 +282,7 @@ http://github.com/devth/soliloquy
     options: {
     }
   };
-  // TWITTER
+  // ## Twitter
   solos["twitter"] = {
     settings: {
       api: "http://twitter.com/status/user_timeline/{username}.json?count={posts}&callback=?",
@@ -268,7 +293,7 @@ http://github.com/devth/soliloquy
       posts: 10
     }
   };
-  // TWITTER LISTS
+  // ## Twitter lists
   solos["twitter_list"] = {
     settings: {
       api: "http://api.twitter.com/1/{username}/lists/{listname}/statuses.json?per_page={posts}&callback=?",
@@ -279,7 +304,7 @@ http://github.com/devth/soliloquy
       listname: ''
     }
   };
-  // LASTFM
+  // ## Last.fm
   solos["last_fm"] = {
     settings: {
       api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={api_key}&limit={tracks}&format=json&callback=?',
