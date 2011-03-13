@@ -1,6 +1,6 @@
 // **Soliloquy** is a jQuery plugin for aggregating posts from many data sources
 //
-//     Copyright (c) 2010 Trevor C. Hartman
+//     Copyright (c) 2011 Trevor C. Hartman
 //     Released under MIT License
 //     http://github.com/devth/soliloquy
 

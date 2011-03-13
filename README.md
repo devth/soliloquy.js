@@ -3,6 +3,8 @@ Soliloquy is a jQuery plugin that aggregates posts from various data sources ("s
 and outputs them as structured HTML. It makes no assumptions about your design or formatting
 preferences and defaults to a minimalistic layout that's ready to be styled with CSS.
 
+[Read the annotated source.](http://devth.github.com/soliloquy/docs/jquery.soliloquy.html)
+
 ## Demo
 See [project page](http://devth.github.com/soliloquy/)
 
@@ -39,5 +41,5 @@ Soliloquy currently supports the following solos:
 Fork the project, add/improve solos and send a pull request.
 
 ## License
-Copyright (c) 2010 Trevor C. Hartman<br>
+Copyright (c) 2011 Trevor C. Hartman<br>
 Released under the [MIT License](http://github.com/devth/soliloquy/blob/master/LICENSE)
