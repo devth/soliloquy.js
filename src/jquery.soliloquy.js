@@ -22,31 +22,31 @@
     // Save a reference to the jQuery object to work on
     var jq = this;
 
-    var public_methods = {};
+    var publicMethods = {};
     // Dynamically build public methods by looping through the solos data structure
-    // and using the `solo_interface` helper to built a scope over each solo's unique
+    // and using the `soloInterface` helper to built a scope over each solo's unique
     // settings object. 
-    for (solo_name in solos){
-      var solo = solos[solo_name];
-      public_methods[solo_name] = solo_interface(solo_name, solo);
+    for (soloName in solos){
+      var solo = solos[soloName];
+      publicMethods[soloName] = soloInterface(soloName, solo);
     }
 
-    function solo_interface(solo_name, solo){
+    function soloInterface(soloName, solo){
       return function(options){
-        var settings = prepare_settings(solo.options, options, solo.settings);
-        api_call(settings, jq);
+        var settings = prepareSettings(solo.options, options, solo.settings);
+        apiCall(settings, jq);
         // Return the jQuery object to provide chaining
         return jq;
       };
     }
 
-    return public_methods;
+    return publicMethods;
   };
 
 
   // ## Helpers
   $.fn.extend({
-    link_url: function () {
+    linkUrl: function () {
       var returning = [];
       var regexp = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
       this.each(function () {
@@ -54,7 +54,7 @@
       });
       return $(returning);
     },
-    link_user: function () {
+    linkUser: function () {
       var returning = [];
       var regexp = /[\@]+([A-Za-z0-9-_]+)/gi;
       this.each(function () {
@@ -62,7 +62,7 @@
       });
       return $(returning);
     },
-    link_hash: function () {
+    linkHash: function () {
       var returning = [];
       var regexp = / [\#]+([A-Za-z0-9-_]+)/gi;
       this.each(function () {
@@ -71,31 +71,31 @@
       return $(returning);
     }
   });
-  function process_post(postText) {
-    return $([ postText ]).link_url().link_user().link_hash()[0];
+  function processPost(postText) {
+    return $([ postText ]).linkUrl().linkUser().linkHash()[0];
   }
-  function build_date_string(parsed_date, relative) {
-    if (relative) return relative_time(parsed_date);
+  function buildDateString(parsedDate, relative) {
+    if (relative) return relativeTime(parsedDate);
     else {
       var localOffset = new Date().getTimezoneOffset() * 60000;
-      var date_time = new Date(parsed_date - localOffset);
+      var dateTime = new Date(parsedDate - localOffset);
       var minutes, hours, ampm;
-      if ((date_time.getHours()) > 12){
-        hours = (date_time.getHours()) - 12;
+      if ((dateTime.getHours()) > 12){
+        hours = (dateTime.getHours()) - 12;
         ampm = "pm";
       } else {
-        hours = (date_time.getHours() == 0) ? 12 : date_time.getHours();
+        hours = (dateTime.getHours() == 0) ? 12 : dateTime.getHours();
         ampm = "am";
       }
-      minutes = (date_time.getMinutes().toString().length == 1) ? "0" + date_time.getMinutes() : date_time.getMinutes();
-      return ((date_time.getMonth() + 1) + "/" + (date_time.getDate()) + "/" + date_time.getFullYear() + 
+      minutes = (dateTime.getMinutes().toString().length == 1) ? "0" + dateTime.getMinutes() : dateTime.getMinutes();
+      return ((dateTime.getMonth() + 1) + "/" + (dateTime.getDate()) + "/" + dateTime.getFullYear() + 
               " at " + (hours) + ":" + minutes + ampm);
     }
   }
-  function relative_time(parsed_date) {
-    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
-    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
-    delta = delta + (relative_to.getTimezoneOffset() * 60);
+  function relativeTime(parsedDate) {
+    var relativeTo = (arguments.length > 1) ? arguments[1] : new Date();
+    var delta = parseInt((relativeTo.getTime() - parsedDate) / 1000);
+    delta = delta + (relativeTo.getTimezoneOffset() * 60);
 
     var r = '';
     if (delta < 60) r = 'a minute ago';
@@ -108,28 +108,28 @@
 
     return r;
   }
-  function parse_date_string(value) {
+  function parseDateString(value) {
     
   }
 
   // ## API helpers
 
-  // `prepare_settings` uses `jQuery.extend` to merge three settings objects in
+  // `prepareSettings` uses `jQuery.extend` to merge three settings objects in
   // increasing order of priority. 
   // 
-  //   -  `options_default` provides a default set
-  //   -  `options_override` holds settings the user optionally specified when consuming Soliloquy
-  //   -  `settings_internal` holds the non-overridable internal settings used to call the API,
+  //   -  `optionsDefault` provides a default set
+  //   -  `optionsOverride` holds settings the user optionally specified when consuming Soliloquy
+  //   -  `settingsInternal` holds the non-overridable internal settings used to call the API,
   //   parse the data and render the output.
-  function prepare_settings(options_default, options_override, settings_internal){
-    var settings = jQuery.extend({}, jQuery.fn.soliloquy.options_global, options_default);
-    settings = jQuery.extend({}, settings, options_override);
-    settings = jQuery.extend({}, settings, settings_internal);
+  function prepareSettings(optionsDefault, optionsOverride, settingsInternal){
+    var settings = jQuery.extend({}, jQuery.fn.soliloquy.optionsGlobal, optionsDefault);
+    settings = jQuery.extend({}, settings, optionsOverride);
+    settings = jQuery.extend({}, settings, settingsInternal);
     return settings;
   }
 
-  // `api_call` handles API calls for every solo by acting on its `settings` object
-  function api_call(settings, jq) {
+  // `apiCall` handles API calls for every solo by acting on its `settings` object
+  function apiCall(settings, jq) {
     // Populate the `api` string with dynamic values
     settings.api = settings.api.supplant(settings); 
   
@@ -137,53 +137,53 @@
     $.getJSON(settings.api, function (data) {
       // Act upon every object the user selected (even though this will almost always be one object)
       return jq.each(function () { 
-        if (settings.data_handler) settings.data_handler.call(this, data, settings, jq);
-        else handle_data(data, settings, jq); 
+        if (settings.dataHandler) settings.dataHandler.call(this, data, settings, jq);
+        else handleData(data, settings, jq); 
       });
     });
   }
-  function handle_data(data, settings, jq){ // GENERIC
+  function handleData(data, settings, jq){ // GENERIC
     $.each(data, function(i, item){
-      $(jq).append(settings.post_builder.call(this, item, settings));
+      $(jq).append(settings.postBuilder.call(this, item, settings));
     });
   }
   
     
   // # Post builders
-  function build_twitter_post(post, settings){
+  function buildTwitterPost(post, settings){
     var html = "<div class='twitter post'>";
     html += "<span class='screen-name'>" + post.user['screen_name'] + "</span> ";
-    html += process_post(post.text);
+    html += processPost(post.text);
     
     var values = post.created_at.split(" ");
-    time_value = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
-    var parsed_date = Date.parse(time_value);
+    timeValue = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
+    var parsedDate = Date.parse(timeValue);
     
-    html += " <span class='created-at'>" + build_date_string(parsed_date, settings.relative_dates) + "</span>";
+    html += " <span class='created-at'>" + buildDateString(parsedDate, settings.relativeDates) + "</span>";
     html += "</div>";
     return html;
   }
-  function build_lastfm_post(post, settings){
+  function buildLastfmPost(post, settings){
     var html = "<div class='lastfm post'>";
     if (settings) html += "<span class='screen-name'>" + settings.username + "</span> ";
     html += "<span class='lastfm_artist'>" + post.artist['#text'] + "</span> &ndash; ";
     html += "<span class='lastfm_track'>" + post.name + "</span>";
 
-    var date_string = settings.label_listening_now;
+    var dateString = settings.labelListeningNow;
     if (post.date) {
-      parsed_date = new Date(post.date['#text']);
-      date_string = build_date_string(parsed_date, settings.relative_dates)
+      parsedDate = new Date(post.date['#text']);
+      dateString = buildDateString(parsedDate, settings.relativeDates)
     }
-    html += " <span class='created-at'>" +  date_string + "</span>";
+    html += " <span class='created-at'>" +  dateString + "</span>";
     html += "</div>";
     return html;
   }
-  function build_facebook_post(post, settings) {
+  function buildFacebookPost(post, settings) {
     
     // Parse date
-    var raw_date = post.created_time;
-    parsed_date = parse_facebook_date(raw_date);
-    var date_string = build_date_string(parsed_date, settings.relative_dates);
+    var rawDate = post.created_time;
+    parsedDate = parseFacebookDate(rawDate);
+    var dateString = buildDateString(parsedDate, settings.relativeDates);
 
     var thumbnail = "http://graph.facebook.com/" + post.from.id + "/picture";
 
@@ -192,9 +192,9 @@
     html += '<div class="post_content">';
       html += '<span class="screen-name">' + post.from.name + '</span> ';
       if (post.type == "status"){
-        html += process_post(post.message);
+        html += processPost(post.message);
       } else if (post.type == "link"){
-        if (post.message) html += '<span class="message">' + process_post(parse_facebook_newlines(post.message)) + '</span>';
+        if (post.message) html += '<span class="message">' + processPost(parseFacebookNewlines(post.message)) + '</span>';
         if (post.picture){
           html += '<div class="link-picture"><a href="' + post.link + '"><img src="' + post.picture + '"></a></div>';
         }
@@ -211,24 +211,24 @@
       }
       html += ' <span class="created-at">';
       if (post.icon) html += '<img src="' + post.icon + '" /> ';
-      html += date_string + "</span>";
+      html += dateString + "</span>";
 
 
       if (post.comments && $.isArray(post.comments.data)){
         html += '<div class="comments">';
           $.each(post.comments.data, function(index, comment){
             
-            var commenter_thumb = "http://graph.facebook.com/" + comment.from.id + "/picture?type=square";
+            var commenterThumb = "http://graph.facebook.com/" + comment.from.id + "/picture?type=square";
 
             html += '<div class="comment">';
               html += '<span class="picture">';
-                html += '<img src="' + commenter_thumb + '" />';
+                html += '<img src="' + commenterThumb + '" />';
               html += '</span>';
               html += '<span class="comment-content">';
                 html += '<span class="screen-name">' + comment.from.name + '</span> ';
-                html += process_post(parse_facebook_newlines(comment.message));
+                html += processPost(parseFacebookNewlines(comment.message));
               html += '</span>';
-              html += ' <span class="created-at">' + date_string + "</span>";
+              html += ' <span class="created-at">' + dateString + "</span>";
           
 
             html += '</div>';
@@ -241,16 +241,16 @@
     html += '</div>';
     return html;
   }
-  function parse_facebook_newlines(message){
+  function parseFacebookNewlines(message){
     return message.replace(/\n/g, '<br>');
   }
-  function parse_facebook_date(raw_date){
-    var year = raw_date.substr(0,4);
-    var month = raw_date.substr(5,2) - 1;
-    var day = raw_date.substr(8,2);
-    var hour = raw_date.substr(11,2);
-    var minute = raw_date.substr(14,2);
-    var second = raw_date.substr(17,2);
+  function parseFacebookDate(rawDate){
+    var year = rawDate.substr(0,4);
+    var month = rawDate.substr(5,2) - 1;
+    var day = rawDate.substr(8,2);
+    var hour = rawDate.substr(11,2);
+    var minute = rawDate.substr(14,2);
+    var second = rawDate.substr(17,2);
     return new Date(year, month, day, hour, minute, second);
   }
 
@@ -272,10 +272,10 @@
   solos["facebook"] = {
     settings: {
       api: 'https://graph.facebook.com/{username}/feed?limit={posts}&callback=?',
-      post_builder: build_facebook_post,
-      data_handler: function (data, settings, jq){
+      postBuilder: buildFacebookPost,
+      dataHandler: function (data, settings, jq){
         $.each(data.data, function (i, item){
-          $(jq).append(settings.post_builder(item, settings));
+          $(jq).append(settings.postBuilder(item, settings));
         });
       }
     },
@@ -286,7 +286,7 @@
   solos["twitter"] = {
     settings: {
       api: "http://twitter.com/status/user_timeline/{username}.json?count={posts}&callback=?",
-      post_builder: build_twitter_post
+      postBuilder: buildTwitterPost
     },
     options: {
       username: '',
@@ -294,10 +294,10 @@
     }
   };
   // ## Twitter lists
-  solos["twitter_list"] = {
+  solos["twitterList"] = {
     settings: {
       api: "http://api.twitter.com/1/{username}/lists/{listname}/statuses.json?per_page={posts}&callback=?",
-      post_builder: build_twitter_post
+      postBuilder: buildTwitterPost
     },
     options: {
       username: '',
@@ -305,20 +305,20 @@
     }
   };
   // ## Last.fm
-  solos["last_fm"] = {
+  solos["lastfm"] = {
     settings: {
-      api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={api_key}&limit={tracks}&format=json&callback=?',
-      post_builder: build_lastfm_post,
-      data_handler: function handle_lastfm_data(data, settings, jq){
+      api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={apiKey}&limit={tracks}&format=json&callback=?',
+      postBuilder: buildLastfmPost,
+      dataHandler: function handleLastfmData(data, settings, jq){
         $.each(data.recenttracks.track, function(i, item){
-          $(jq).append(settings.post_builder(item, settings));
+          $(jq).append(settings.postBuilder(item, settings));
         });
       }
     },
     options: {
-      label_listening_now: 'now playing',
+      labelListeningNow: 'now playing',
       username: '',
-      api_key: ''
+      apiKey: ''
     }
   };
 
