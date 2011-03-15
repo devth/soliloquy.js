@@ -132,13 +132,15 @@
   function apiCall(settings, jq) {
     // Populate the `api` string with dynamic values
     settings.api = settings.api.supplant(settings); 
+    // Append callback for JSONP if not present
+    if (settings.api.indexOf("callback") === -1) { settings.api += "&callback=?"; }
   
     // Retrive data from the API
     $.getJSON(settings.api, function (data) {
       // Act upon every object the user selected (even though this will almost always be one object)
       return jq.each(function () { 
-        if (settings.dataHandler) settings.dataHandler.call(this, data, settings, jq);
-        else handleData(data, settings, jq); 
+        if (settings.dataHandler) { settings.dataHandler.call(this, data, settings, jq); }
+        else { handleData(data, settings, jq); } 
       });
     });
   }
@@ -271,7 +273,7 @@
   // ## Facebook
   solos["facebook"] = {
     settings: {
-      api: 'https://graph.facebook.com/{username}/feed?limit={posts}&callback=?',
+      api: 'https://graph.facebook.com/{username}/feed?limit={posts}',
       postBuilder: buildFacebookPost,
       dataHandler: function (data, settings, jq){
         $.each(data.data, function (i, item){
@@ -285,7 +287,7 @@
   // ## Twitter
   solos["twitter"] = {
     settings: {
-      api: "http://twitter.com/status/user_timeline/{username}.json?count={posts}&callback=?",
+      api: 'http://twitter.com/status/user_timeline/{username}.json?count={posts}',
       postBuilder: buildTwitterPost
     },
     options: {
@@ -296,7 +298,7 @@
   // ## Twitter lists
   solos["twitterList"] = {
     settings: {
-      api: "http://api.twitter.com/1/{username}/lists/{listname}/statuses.json?per_page={posts}&callback=?",
+      api: 'http://api.twitter.com/1/{username}/lists/{listname}/statuses.json?per_page={posts}',
       postBuilder: buildTwitterPost
     },
     options: {
@@ -307,7 +309,7 @@
   // ## Last.fm
   solos["lastfm"] = {
     settings: {
-      api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={apiKey}&limit={tracks}&format=json&callback=?',
+      api: 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}&api_key={apiKey}&limit={tracks}&format=json',
       postBuilder: buildLastfmPost,
       dataHandler: function handleLastfmData(data, settings, jq){
         $.each(data.recenttracks.track, function(i, item){
