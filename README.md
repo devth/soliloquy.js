@@ -13,10 +13,10 @@ See [project page](http://devth.github.com/soliloquy/)
     <script type="text/javascript" charset="utf-8"> 
       $(function(){  
         $('.feed')
-          .slq().facebook({ username: 'CriterionCollection', posts: 8, relative_dates: false } )
-          .slq().twitter({username: 'devth', posts: 6, relative_dates: false })
-          .slq().twitter_list({username: 'rails', listname: 'core', posts: 2 })
-          .slq().last_fm({ username: 'trevorhartman', api_key: '930dbe080df156eb81444b27a63d948b', relative_dates: false });
+          .slq().facebook({ username: 'CriterionCollection', posts: 8, relativeDates: false } )
+          .slq().twitter({username: 'devth', posts: 6, relativeDates: false })
+          .slq().twitterList({username: 'rails', listname: 'core', posts: 2 })
+          .slq().lastfm({ username: 'trevorhartman', apiKey: '930dbe080df156eb81444b27a63d948b', relativeDates: false });
       });
     </script> 
     <div class="feed"></div> 
@@ -25,7 +25,7 @@ See [project page](http://devth.github.com/soliloquy/)
 A `solo` is a data source accessed via an API. Soliloquy's goal is to support many solos and make it
 extremely quick and easy to add additional solos. To facilitate this, AJAX data retrieval is abstracted away as much as possible, leaving the absolute necessary pieces to be described for each module. Each solo is comprised of:
 
-* Options: public options allowing user to set required fields (e.g. `username` on `twitter`) and optional settings (e.g. `relative_dates: false`).
+* Options: public options allowing user to set required fields (e.g. `username` on `twitter`) and optional settings (e.g. `relativeDates: false`).
 * Settings: internal settings that include properties such as the external API url and the local function to parse the data and create the HTML.
 
 The soliloquy core then parses these objects and provides an interface for a user to call them. The abstracted architecture makes it simple to add new data sources as they come along. See the [solos section](https://github.com/devth/soliloquy/blob/master/src/jquery.soliloquy.js#L243-298) of the source for examples.
@@ -33,7 +33,7 @@ The soliloquy core then parses these objects and provides an interface for a use
 Soliloquy currently supports the following solos:
 
 * Twitter `twitter(options)`
-* Twitter Lists `twitter_list(options)`
+* Twitter Lists `twitterList(options)`
 * Last.fm plays `lastfm(options)`
 * Facebook wall feeds `facebook(options)`
 
