@@ -22,15 +22,7 @@
     // Save a reference to the jQuery object to work on
     var jq = this;
 
-    var publicMethods = {};
-    // Dynamically build public methods by looping through the solos data structure
-    // and using the `soloInterface` helper to built a scope over each solo's unique
-    // settings object. 
-    for (soloName in solos){
-      var solo = solos[soloName];
-      publicMethods[soloName] = soloInterface(soloName, solo);
-    }
-
+    // Helper to build public interface for each `solo`.
     function soloInterface(soloName, solo){
       return function(options){
         var settings = prepareSettings(solo.options, options, solo.settings);
@@ -39,6 +31,16 @@
         return jq;
       };
     }
+
+    var publicMethods = {};
+    // Dynamically build public methods by looping through the solos data structure
+    // and using the `soloInterface` helper to build a scope over each `solo`'s unique
+    // `settings` object. 
+    for (soloName in solos){
+      var solo = solos[soloName];
+      publicMethods[soloName] = soloInterface(soloName, solo);
+    }
+
 
     return publicMethods;
   };
